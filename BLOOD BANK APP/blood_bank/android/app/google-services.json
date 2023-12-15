@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "181732066279",
+    "project_id": "vital-flow-795f1",
+    "storage_bucket": "vital-flow-795f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181732066279:android:992c316768cc34bbfb3342",
+        "android_client_info": {
+          "package_name": "com.example.blood_bank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181732066279-t2lui2vhos0maoq7cso8h0iac6rf7f9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA18uTYI2yJXhFxoaeaW0DTPlvq-5Ukx1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181732066279-t2lui2vhos0maoq7cso8h0iac6rf7f9e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

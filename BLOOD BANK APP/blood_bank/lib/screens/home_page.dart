@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:blood_bank/constants/colors.dart';
-import 'package:blood_bank/providers/patients_provider.dart';
+import 'package:blood_bank/models/hospital_model.dart';
+import 'package:blood_bank/models/patient_model.dart';
+import 'package:blood_bank/services/auth_service/auth_service.dart';
 import 'package:blood_bank/widgets/notification_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
+import '../services/firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isLoading = false;
+  final Firestore _firestore = Firestore();
   @override
   void initState() {
     super.initState();
@@ -22,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   loadHomePage() async {
     Future.delayed(
-      const Duration(seconds: 5),
+      const Duration(seconds: 3),
       () {
         setState(() {
           isLoading = true;
@@ -31,12 +39,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void signout() async {
+    final authservice = Provider.of<AuthService>(context, listen: false);
+    authservice.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         // width: 300,
         width: MediaQuery.of(context).size.width * 0.8,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: signout,
+              icon: const Icon(
+                Icons.logout,
+                size: 50,
+              ),
+            )
+          ],
+        ),
       ),
       appBar: AppBar(
         // leading: const SizedBox(),
@@ -100,14 +125,38 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        child: Consumer<PatientsProvider>(
-          builder: (context, value, child) {
-            return ListView.builder(
-              itemCount: value.patients.length,
-              itemBuilder: (context, index) {
-                return NotificationTile(patient: value.patients[index]);
-              },
-            );
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _firestore.getPatientes(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              log("no");
+              return const Text("No Notification...");
+            } else {
+              log("yes");
+              List patients = snapshot.data!.docs;
+              return ListView.builder(
+                itemCount: patients.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot document = patients[index];
+                  Map<String, dynamic> data =
+                      document.data() as Map<String, dynamic>;
+                  int patientId = index;
+                  String patientName = data["patientName"];
+                  String bloodNeeded = data["bloodNeeded"];
+                  HospitalModel hospital = HospitalModel(
+                      hospitalId: index, hospitalName: data["hospital"]);
+                  final PatientsModel patient = PatientsModel(
+                      patientId: patientId,
+                      patientName: patientName,
+                      bloodNeeded: bloodNeeded,
+                      hospital: hospital);
+
+                  return NotificationTile(
+                    patient: patient,
+                  );
+                },
+              );
+            }
           },
         ),
       ),

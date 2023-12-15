@@ -1,10 +1,11 @@
 import 'package:blood_bank/asset_manager/asset_manager.dart';
 import 'package:blood_bank/constants/colors.dart';
+// import 'package:blood_bank/screens/auth/auth_gate.dart';
 import 'package:blood_bank/screens/intro_page.dart';
 import 'package:flutter/material.dart';
 
-class BloodBankWelcomeScreen extends StatelessWidget {
-  const BloodBankWelcomeScreen({super.key});
+class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,8 @@ class BloodBankWelcomeScreen extends StatelessWidget {
                 // onTap: () => Navigator.pushNamed(context, "/intro"),
                 onTap: () => Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
-                    return IntroPage();
+                    return const IntroPage();
+                    // return const AuthGate();
                   },
                 )),
                 child: Container(

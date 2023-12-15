@@ -9,6 +9,7 @@ class InputField extends StatelessWidget {
   final TextInputType inputType;
   final Function()? togglePassword;
   final bool showPassword;
+  final controller;
 
   const InputField({
     super.key,
@@ -18,12 +19,13 @@ class InputField extends StatelessWidget {
     required this.inputName,
     required this.inputType,
     required this.togglePassword,
-    required this.showPassword,
+    required this.showPassword, this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       keyboardType: inputType,
       decoration: InputDecoration(

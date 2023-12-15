@@ -2,8 +2,10 @@ import 'package:blood_bank/asset_manager/asset_manager.dart';
 import 'package:blood_bank/constants/colors.dart';
 import 'package:blood_bank/screens/auth/register_page.dart';
 import 'package:blood_bank/screens/home_page.dart';
+import 'package:blood_bank/services/auth_service/auth_service.dart';
 import 'package:blood_bank/widgets/input_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,11 +16,32 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool showPassword = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void togglePassword() {
     setState(() {
       showPassword = !showPassword;
     });
+  }
+
+  signIn() async {
+    final authservice = Provider.of<AuthService>(context, listen: false);
+    try {
+      await authservice.signInWithEmailandPassword(
+          emailController.text, passwordController.text);
+      return const HomePage();
+    } catch (e) {
+      // print(e);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -61,26 +84,30 @@ class _LoginPageState extends State<LoginPage> {
                       inputType: TextInputType.emailAddress,
                       togglePassword: null,
                       showPassword: showPassword,
+                      controller: emailController,
                     ),
                     const SizedBox(
                       height: 25,
                     ),
                     // PASSWORD FIELD
                     InputField(
-                        obscureText: true,
-                        icon: const Icon(Icons.lock),
-                        isPasswordField: true,
-                        inputName: "Password",
-                        inputType: TextInputType.visiblePassword,
-                        togglePassword: togglePassword,
-                        showPassword: showPassword),
+                      obscureText: true,
+                      icon: const Icon(Icons.lock),
+                      isPasswordField: true,
+                      inputName: "Password",
+                      inputType: TextInputType.visiblePassword,
+                      togglePassword: togglePassword,
+                      showPassword: showPassword,
+                      controller: passwordController,
+                    ),
                     // login btn
                     GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return const HomePage();
-                        },
-                      )),
+                      // onTap: () => Navigator.push(context, MaterialPageRoute(
+                      //   builder: (context) {
+                      //     return const HomePage();
+                      //   },
+                      // )),
+                      onTap: signIn,
                       child: Container(
                         margin: const EdgeInsets.only(top: 30),
                         width: 320,

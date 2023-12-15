@@ -1,3 +1,8 @@
 integrate google map api
 
 go to console.cloud.google.com
+
+data from snapshot
+
+get hospital id
+
